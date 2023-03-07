@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "875898523244",
+    "firebase_url": "https://speeddating-69845-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "speeddating-69845",
+    "storage_bucket": "speeddating-69845.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:875898523244:android:08a18b502bb737445b9249",
+        "android_client_info": {
+          "package_name": "com.ray.dating"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "875898523244-cr4916hi07ip8hamk4dsltnjqbm346i2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ray.dating",
+            "certificate_hash": "823e7489c6c3aadc4e81c689222152d0c93fe9f4"
+          }
+        },
+        {
+          "client_id": "875898523244-ac87vknd94jiubaa12m2ai8q2r81ltms.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgFfWG8ltHlefqhQdwZdtRFUybETlMDTc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "875898523244-ac87vknd94jiubaa12m2ai8q2r81ltms.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

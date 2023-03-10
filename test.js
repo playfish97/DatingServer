@@ -1,6 +1,6 @@
 const admin = require('firebase-admin');
 
-const serviceAccount = require('./google-services.json');
+const serviceAccount = require('./speeddating-69845-firebase-adminsdk-gs27f-29ba9b2300.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),

@@ -1,6 +1,6 @@
 const admin = require('firebase-admin');
 
-const serviceAccount = require('./playfish97/DatingServer/blob/master/google-services.json');
+const serviceAccount = require('./google-services.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),

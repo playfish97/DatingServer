@@ -5,11 +5,17 @@ FROM python:3.8-slim-buster
 WORKDIR /app
 
 # Copy the current directory contents into the container at /app
-COPY . /app
+COPY requirements.txt ./
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --trusted-host pypi.python.org -r requirements.txt
+RUN pip install Flask
 
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        build-essential \
+        libpq-dev \
+    && pip install --trusted-host pypi.python.org -r requirements.txt
+
+COPY . .
 # Make port 80 available to the world outside this container
 EXPOSE 80
 

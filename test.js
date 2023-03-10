@@ -1,6 +1,6 @@
 const admin = require('firebase-admin');
 
-const serviceAccount = require('C:/Users/p8148/AndroidStudioProjects/Dating/app/speeddating-69845-firebase-adminsdk-gs27f-29ba9b2300.json');
+const serviceAccount = require('./playfish97/DatingServer/blob/master/google-services.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),

@@ -7,4 +7,5 @@ def hello():
     return 'Hello, World!'
 
 if __name__ == '__main__':
-    app.run()
+    from gunicorn.app.wsgiapp import run
+    run()

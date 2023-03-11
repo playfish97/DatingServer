@@ -27,7 +27,7 @@ const message = {
     title: 'Title of the notification',
     body: 'Body of the notification'
   },
-  token: '<device-token>'
+  token: 'ceyNntuCSYCc4vPk6wuTHw:APA91bHqKij7f1PTonswcl19lj3hl-f1uuxnybHdWCr3wE46IcHR2Wk2Kk4-zeA-WGecHmyBzYJkgLBjz6rHhkyCj2XRuOvzmLHPT2H-MxpsEvdOcmUftSEsEDuN7itKcAFXrykoSayH'
 };
 
 admin.messaging().send(message)

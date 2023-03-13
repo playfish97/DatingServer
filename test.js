@@ -38,6 +38,7 @@ admin.messaging().send(message)
     console.log('Error sending message:', error);
   });
 
+  /*
 const socket = io();
   io.on('connection', (socket) => {
     console.log('a user connected');
@@ -48,3 +49,4 @@ const socket = io();
       console.log('user disconnected');
     });
   });
+  */

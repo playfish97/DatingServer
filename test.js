@@ -37,3 +37,13 @@ admin.messaging().send(message)
   .catch((error) => {
     console.log('Error sending message:', error);
   });
+
+  io.on('connection', (socket) => {
+    console.log('a user connected');
+    
+    socket.emit('message', 'Hi, server is working');
+    
+    socket.on('disconnect', () => {
+      console.log('user disconnected');
+    });
+  });

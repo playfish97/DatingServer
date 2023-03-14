@@ -17,6 +17,10 @@ app.get('/calculate', (req, res) => {
     res.send({ result }); // Send the result back to the client
 });
 
+app.get('/testServerConnect', function routeHandler(req, res) {
+  res.send('ok')
+})
+
 app.listen(3000, () => {
   console.log('Server listening on port 3000');
   console.log('Hi user, nice to meet you.')

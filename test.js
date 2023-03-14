@@ -17,6 +17,7 @@ app.get('/calculate', (req, res) => {
     res.send({ result }); // Send the result back to the client
 });
 
+
 app.get('/testServerConnect', function routeHandler(req, res) {
   res.send('ok')
 })

@@ -10,6 +10,12 @@ admin.initializeApp({
 const express = require('express');
 const app = express();
 
+app.post('/log', express.json(), (req, res) => {
+  const message = req.body.message;
+  console.log(`Android app log: ${message}`);
+  res.status(200).send({ status: 'ok' });
+});
+
 app.get('/calculate', (req, res) => {
     const data = req.query.data; // Get the value of the 'data' query parameter
     const result = data * 2; // Perform a calculation using the data

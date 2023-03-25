@@ -1,11 +1,45 @@
 const admin = require('firebase-admin');
 
-const serviceAccount = require('C:\Users\p8148\AndroidStudioProjects\Dating\app\google-services.json');
+const serviceAccount = require('./speeddating-69845-firebase-adminsdk-gs27f-29ba9b2300.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: 'https://speeddating-69845-default-rtdb.asia-southeast1.firebasedatabase.app/'
 });
+
+const express = require('express');
+const app = express();
+
+app.post('/log', express.json(), (req, res) => {
+  const message = req.body.message;
+  console.log(`Android app log: ${message}`);
+  res.status(200).send({ status: 'ok' });
+});
+
+app.get('/testServerConnect', function routeHandler(req, res) {
+  res.send('ok')
+})
+
+app.listen(3000, () => {
+  console.log('Server listening on port 3000');
+  console.log('Hi user, nice to meet you.')
+});
+
+const message = {
+  notification: {
+    title: 'Title of the notification',
+    body: 'Body of the notification'
+  },
+  token: 'ceyNntuCSYCc4vPk6wuTHw:APA91bHqKij7f1PTonswcl19lj3hl-f1uuxnybHdWCr3wE46IcHR2Wk2Kk4-zeA-WGecHmyBzYJkgLBjz6rHhkyCj2XRuOvzmLHPT2H-MxpsEvdOcmUftSEsEDuN7itKcAFXrykoSayH'
+};
+
+admin.messaging().send(message)
+  .then((response) => {
+    console.log('Successfully sent message:', response);
+  })
+  .catch((error) => {
+    console.log('Error sending message:', error);
+  });
 
 app.get('/calculate', (req, res) => {
   const userId = req.query.userId; // Get the user ID from the query parameters

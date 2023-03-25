@@ -24,6 +24,54 @@ app.get('/calculate', (req, res) => {
     });
 });
 
+app.get('/random', (req, res) => {
+  const gender = req.query.gender; // Get the gender from the query parameters
+
+  // Function to get a random user from the database
+  getRandomUser(gender)
+    .then((randomUser) => {
+      res.send({ user: randomUser });
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send({ error: 'Error getting a random user' });
+    });
+});
+
+function getRandomUser(gender) {
+  return new Promise((resolve, reject) => {
+    // Get a reference to the users in the database
+    const usersRef = admin.database().ref('users');
+
+    // Retrieve all users from the database
+    usersRef.once('value')
+      .then((snapshot) => {
+        const users = snapshot.val();
+        const filteredUsers = [];
+
+        // Filter users based on the chosen gender
+        for (const userId in users) {
+          if (users[userId].gender === gender || gender === 'random') {
+            filteredUsers.push(users[userId]);
+          }
+        }
+
+        // Select a random user from the filtered users
+        if (filteredUsers.length > 0) {
+          const randomIndex = Math.floor(Math.random() * filteredUsers.length);
+          const randomUser = filteredUsers[randomIndex];
+          resolve(randomUser);
+        } else {
+          reject(new Error('No users found for the given gender'));
+        }
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
+
+
 function calculateMatchingScore(userPrefs) {
   // Your calculation code goes here
   // For example, you can calculate the matching score based on the selected age and constellation preferences

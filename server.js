@@ -105,7 +105,7 @@ function getRandomUser(gender) {
   });
 }
 
-
+/*
 function calculateMatchingScore(userPrefs) {
   // Your calculation code goes here
   // For example, you can calculate the matching score based on the selected age and constellation preferences
@@ -145,3 +145,4 @@ function calculateMatchingScore(userPrefs) {
 
   res.send({ result: matchingScore });
   //Replace matchingScore with the result of your calculation.
+  */

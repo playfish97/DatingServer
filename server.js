@@ -16,23 +16,6 @@ app.post('/log', express.json(), (req, res) => {
   res.status(200).send({ status: 'ok' });
 });
 
-app.post('/sendNotification', express.json(), (req, res) => {
-  const toUserId = req.body.toUserId;
-  const title = req.body.title;
-  const body = req.body.body;
-
-  sendNotification(toUserId, title, body)
-    .then((response) => {
-      console.log('Successfully sent message:', response);
-      res.status(200).send({ status: 'ok' });
-    })
-    .catch((error) => {
-      console.log('Error sending message:', error);
-      res.status(500).send({ error: 'Error sending notification' });
-    });
-});
-
-
 app.get('/testServerConnect', function routeHandler(req, res) {
   res.send('ok')
 })
@@ -121,29 +104,6 @@ function getRandomUser(gender) {
       });
   });
 }
-
-function sendNotification(toUserId, title, body) {
-  const userTokenRef = admin.database().ref(`users/${toUserId}/token`);
-
-  return userTokenRef.once('value').then((snapshot) => {
-    const userToken = snapshot.val();
-
-    if (!userToken) {
-      throw new Error('User token not found');
-    }
-
-    const message = {
-      notification: {
-        title: title,
-        body: body,
-      },
-      token: userToken,
-    };
-
-    return admin.messaging().send(message);
-  });
-}
-
 
 /*
 function calculateMatchingScore(userPrefs) {

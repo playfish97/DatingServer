@@ -105,6 +105,29 @@ function getRandomUser(gender) {
   });
 }
 
+function sendNotification(toUserId, title, body) {
+  const userTokenRef = admin.database().ref(`users/${toUserId}/token`);
+
+  return userTokenRef.once('value').then((snapshot) => {
+    const userToken = snapshot.val();
+
+    if (!userToken) {
+      throw new Error('User token not found');
+    }
+
+    const message = {
+      notification: {
+        title: title,
+        body: body,
+      },
+      token: userToken,
+    };
+
+    return admin.messaging().send(message);
+  });
+}
+
+
 /*
 function calculateMatchingScore(userPrefs) {
   // Your calculation code goes here

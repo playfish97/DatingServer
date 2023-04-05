@@ -9,6 +9,7 @@ admin.initializeApp({
 
 const express = require('express');
 const app = express();
+const database = admin.database();
 
 app.post('/log', express.json(), (req, res) => {
   const message = req.body.message;
@@ -25,38 +26,51 @@ app.listen(3000, () => {
   console.log('Hi user, nice to meet you.')
 });
 
-const message = {
-  notification: {
-    title: 'Title of the notification',
-    body: 'Body of the notification'
-  },
-  token: 'ceyNntuCSYCc4vPk6wuTHw:APA91bHqKij7f1PTonswcl19lj3hl-f1uuxnybHdWCr3wE46IcHR2Wk2Kk4-zeA-WGecHmyBzYJkgLBjz6rHhkyCj2XRuOvzmLHPT2H-MxpsEvdOcmUftSEsEDuN7itKcAFXrykoSayH'
-};
+// Realtime Database trigger for new messages
+database.ref('chatrooms').on('child_added', (snapshot) => {
+  snapshot.ref.child('messages').on('child_added', async (messageSnapshot) => {
+    const chatroomId = snapshot.key;
+    const message = messageSnapshot.val();
+    const senderId = message.sender;
+    const recipientId = getRecipientId(chatroomId, senderId);
 
-admin.messaging().send(message)
-  .then((response) => {
-    console.log('Successfully sent message:', response);
-  })
-  .catch((error) => {
-    console.log('Error sending message:', error);
+    if (recipientId) {
+      const recipientToken = await getRecipientToken(recipientId);
+
+      if (recipientToken) {
+        sendNotification(recipientToken, message.message);
+      }
+    }
   });
-
-app.get('/calculate', (req, res) => {
-  const userId = req.query.userId; // Get the user ID from the query parameters
-  const userPrefsRef = admin.database().ref(`users/${userId}/preferences`); // Reference to the user preferences in the database
-
-  userPrefsRef.once('value')
-    .then((snapshot) => {
-      const userPrefs = snapshot.val(); // Retrieve the user preferences from the snapshot
-      // Calculate the matching score based on the user preferences
-      const matchingScore = calculateMatchingScore(userPrefs);
-      res.send({ result: matchingScore }); // Send the matching score as the response
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send({ error: 'Error retrieving user preferences' });
-    });
 });
+
+function getRecipientId(chatroomId, senderId) {
+  const userIds = chatroomId.split('_');
+  return userIds.find(id => id !== senderId);
+}
+
+async function getRecipientToken(recipientId) {
+  // Retrieve the FCM token of the recipient user
+  const tokenSnapshot = await database.ref(`users/${recipientId}/fcmToken`).once('value');
+  return tokenSnapshot.val();
+}
+
+async function sendNotification(recipientToken, messageText) {
+  const message = {
+    notification: {
+      title: 'New Message',
+      body: messageText
+    },
+    token: recipientToken
+  };
+
+  try {
+    const response = await admin.messaging().send(message);
+    console.log('Successfully sent message:', response);
+  } catch (error) {
+    console.log('Error sending message:', error);
+  }
+}
 
 app.get('/random', (req, res) => {
   const gender = req.query.gender; // Get the gender from the query parameters
@@ -86,63 +100,20 @@ function getRandomUser(gender) {
         // Filter users based on the chosen gender
         for (const userId in users) {
           if (users[userId].gender === gender || gender === 'random') {
-            filteredUsers.push(users[userId]);
+          filteredUsers.push(users[userId]);
           }
-        }
-
-        // Select a random user from the filtered users
-        if (filteredUsers.length > 0) {
-          const randomIndex = Math.floor(Math.random() * filteredUsers.length);
-          const randomUser = filteredUsers[randomIndex];
-          resolve(randomUser);
-        } else {
-          reject(new Error('No users found for the given gender'));
-        }
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-}
-
-/*
-function calculateMatchingScore(userPrefs) {
-  // Your calculation code goes here
-  // For example, you can calculate the matching score based on the selected age and constellation preferences
-  const agePref = userPrefs.agePref;
-  const constellationPref = userPrefs.constellationPref;
-  let matchingScore = 0;
-  if (agePref === 'Younger') {
-    matchingScore += 10;
-  } else if (agePref === 'Older') {
-    matchingScore -= 10;
-  }
-  if (constellationPref.includes('Leo')) {
-    matchingScore += 5;
-  }
-  if (constellationPref.includes('Virgo')) {
-    matchingScore += 5;
-  }
-  if (constellationPref.includes('Libra')) {
-    matchingScore += 5;
-  }
-  return matchingScore;
-}
-
-  const userPrefsRef = admin.database().ref(`users/${userId}/preferences`);
-  //Replace userId with the ID of the user whose preferences you want to retrieve.
-
-  userPrefsRef.once('value')
-  .then((snapshot) => {
-    const userPrefs = snapshot.val();
-    // Your calculation code goes here
+          }
+           // Select a random user from the filtered users
+    if (filteredUsers.length > 0) {
+      const randomIndex = Math.floor(Math.random() * filteredUsers.length);
+      const randomUser = filteredUsers[randomIndex];
+      resolve(randomUser);
+    } else {
+      reject(new Error('No users found for the given gender'));
+    }
   })
   .catch((error) => {
-    // Handle errors here
+    reject(error);
   });
-
-  //Use Firebase's once() method to read the data from the database at the specified location.
-
-  res.send({ result: matchingScore });
-  //Replace matchingScore with the result of your calculation.
-  */
+});
+}
